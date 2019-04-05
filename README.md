@@ -63,8 +63,11 @@ Module file: XX.txt
 ```
 ### 3.2 Output file
 Output format
+
 | module_genes | seed | module_score | edge_score| n_edges | z_perm |
-| --- | --- | --- | --- | --- | --- |
+| ---------- | ---------- |  :----:  |  :----:  |  :----:  |  :----:  |
 | gene1 gene2 | gene1 | XX | XX | 1 | XX |
 | gene2 gene3 gene4 | gene2 | XX | XX | 2 | XX |
 ## 4. Export the result to Cytoscape and Build Network
+
+
