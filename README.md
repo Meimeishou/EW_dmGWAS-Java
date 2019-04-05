@@ -1,4 +1,7 @@
 # EW_dmGWAS-Java
+## Input file:
+## Output file:
+## 
 ## 1. Infer node weight
 p value to z score
 ## 2. Infer edge weight
@@ -9,9 +12,11 @@ PCC
 
 ## 3. Run Java version of EW_dmGWAS on Windows
 ### 3.1 Command line
+```
 c:
 cd C:\Users\fyan\EW_dmGWAS
 C:\Users\fyan\EW_dmGWAS> java EW_dmGWAS_v3_1
+```
 usage: java EW_dmGWAS_v3_1 model={lambda|EW_dmGWAS}
         <node_weight_file=XX>
         <edge_weight_file=edge_weight_file>
