@@ -6,10 +6,10 @@
 ## 1. Infer node weight
 p value to z score
 ## 2. Infer edge weight
-normalizing probes
-duplicate (aggregate)
-first match with PPI
-PCC
+### probe gene expression normalization
+### remove duplicate probes (aggregate)
+### match with PPI
+### PCC
 
 ## 3. Run Java version of EW_dmGWAS on Windows
 ### 3.1 Command line
