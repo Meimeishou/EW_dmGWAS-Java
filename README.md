@@ -4,12 +4,8 @@
 2. Human protein-protein interaction network file
 
 ## 1. Infer node weight
-p value to z score
+
 ## 2. Infer edge weight
-### probe gene expression normalization
-### remove duplicate probes (aggregate)
-### match with PPI
-### PCC
 
 ## 3. Run Java version of EW_dmGWAS on Windows
 ### 3.1 Command line
