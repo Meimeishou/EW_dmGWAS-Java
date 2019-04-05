@@ -32,6 +32,7 @@ Example 1
 java EW_dmGWAS_v3_1  model=lambda node_weight_file=XX edge_weight_file=XX 
 ```
 The output looks like this:
+```
 input genes = XX
 PPIs = XX edges, XX nodes
 5.0     # modules=XX       avg_nodes=XX  avg_edges=XX estimated_lambda = XX
@@ -40,12 +41,14 @@ PPIs = XX edges, XX nodes
 8.0     # modules=XX       avg_nodes=XX  avg_edges=XX estimated_lambda = XX
 9.0     # modules=XX       avg_nodes=XX  avg_edges=XX estimated_lambda = XX
 10.0     # modules=XX       avg_nodes=XX  avg_edges=XX estimated_lambda = XX
+```
 
 Example 2
 ```
 java EW_dmGWAS_v3_1  model=EW_dmGWAS node_weight_file=XX edge_weight_file=XX lambda=1 r=0.2 output=XX.txt permutation=true
 ```
 The output looks like this:
+```
 Start at: Fri 2019.04.05 at 11:22:45 AM CDT
 Set lambda_1 = 1.0
 input genes = XX
@@ -57,6 +60,6 @@ Start permutation for 1000 times. This may take some time.
 0.1.2.3...997.998.999.Permutation finished !
 Finished: Fri 2019.04.05 at 12:36:49 PM CDT
 Module file: XX.txt
-
+```
 ### 3.2 Output file
 ## 4. Export the result to Cytoscape and Build Network
