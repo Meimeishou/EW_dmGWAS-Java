@@ -17,7 +17,7 @@ PCC
 > c:
 > mkdir C:\Users\fyan\EW_dmGWAS
 > cd C:\Users\fyan\EW_dmGWAS
-> C:\Users\fyan\EW_dmGWAS> java EW_dmGWAS_v3_1
+> java EW_dmGWAS_v3_1
 usage: java EW_dmGWAS_v3_1 model={lambda|EW_dmGWAS}
         <node_weight_file=XX>
         <edge_weight_file=edge_weight_file>
