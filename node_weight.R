@@ -1,0 +1,6 @@
+gwas_summary <- read.delim("path_to_GWAS_summary_statistics_file",as.is=T)
+head(gwas_summary)
+gwas_summary$e <- qnorm(1-gwas_summary$pvalue/2)
+hist(gwas_summary$e)
+gwas_summaryn$e_scale <- scale(gwas_asian$e)
+write.table(gwas_summary[,c(1,4)],"node_weight.txt",sep="\t",row.names=FALSE)
