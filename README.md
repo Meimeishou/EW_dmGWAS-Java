@@ -1,7 +1,10 @@
 # EW_dmGWAS-Java
-## Input file:
+### EW_dmGWAS (Edge-weighted dense module search for genome-wide association studies and gene expression profiles). More information can be found at https://bioinfo.uth.edu/dmGWAS/.
+
+## Input files:
 1. GWAS summary statistic file
 2. Human protein-protein interaction network file
+3. Gene expression file
 
 ## 1. Infer node weight
 
@@ -66,5 +69,6 @@ Output format
 | gene2 gene3 gene4 | gene2 | XX | XX | 2 | XX |
 | gene5 gene6 | gene6 | XX | XX | 1 | XX |
 ## 4. Export the result to Cytoscape and Build Network
+## 
 
 
