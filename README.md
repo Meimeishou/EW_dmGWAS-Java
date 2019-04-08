@@ -64,6 +64,7 @@ Output format
 | ---------- | ---------- |  :----:  |  :----:  |  :----:  |  :----:  |
 | gene1 gene2 | gene1 | XX | XX | 1 | XX |
 | gene2 gene3 gene4 | gene2 | XX | XX | 2 | XX |
+| gene5 gene6 | gene6 | XX | XX | 1 | XX |
 ## 4. Export the result to Cytoscape and Build Network
 
 
