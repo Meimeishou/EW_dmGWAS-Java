@@ -7,8 +7,10 @@
 3. Gene expression file
 
 ## 1. Infer node weight
+see node_weight.R
 
 ## 2. Infer edge weight
+see edge_weight.R
 
 ## 3. Run Java version of EW_dmGWAS on Windows
 ### 3.1 Command line
@@ -69,6 +71,6 @@ Output format
 | gene2 gene3 gene4 | gene2 | XX | XX | 2 | XX |
 | gene5 gene6 | gene6 | XX | XX | 1 | XX |
 ## 4. Export the result to Cytoscape and Build Network
-## 
+see network_generate.R
 
 
