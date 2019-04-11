@@ -74,5 +74,22 @@ F.equation = function(x){
   (1/2) * log((1+x)/(1-x))
 }
 
-
+# Calculating edge-weights
+Ncontrol <- 11
+Ncase <- 10
+X <- data.frame()
+denominator = sqrt((1/(Ncase-3)) + (1/(Ncontrol-3))) 
+for(k in 1:nrow(case_PPI_PCC.shared)){
+  X[k,1] <- case_PPI_PCC.shared[k,1]
+  X[k,2] <- case_PPI_PCC.shared[k,2]
+  r.case <- case_PPI_PCC.shared[k,3]
+  r.control <- control_PPI_PCC.shared[k,3]
+  f.case = F.equation(r.case)
+  
+  f.control = F.equation(r.control)
+  
+  X[k,3] = (f.case - f.control)/denominator
+  X[k,4] = f.case
+  X[k,5] = f.control
+}
 
