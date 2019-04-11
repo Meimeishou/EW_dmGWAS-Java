@@ -12,6 +12,7 @@ PPI <- read.table("PATH_TO_PPI", as.is = T)
 
 #Obtaining PCC
 obtainPCC <- function(GE.matrix){
+  message("Obtaining PCC values")
   PCCvalues <- cor(t(GE.matrix))
   return(PCCvalues)
 }
@@ -25,7 +26,7 @@ matchPCCtoPPI <- function(PCCvalues, PPI){
   genes.with.expression <- row.names(GE.case)
   
   PPI_PCC <- data.frame()
-  message("Iterating through PPI network...")
+  message("Iterating through PPI network and obtaining PCC values...")
   
   for(i in seq(1:nrow(PPI))){
     
@@ -52,22 +53,25 @@ case_PPI_PCC <- matchPCCtoPPI(casePCC, PPI)
 
 # matching case vs control shared edges for edge-weight calculations
 
-apply(control_PPI_PCC, 1, function(u){
-  paste( sort(c(u[1], u[2])), collapse="|")
-}) -> ctrl.str
+matchSharedEdges <- function(control_PPI_PCC, case_PPI_PCC){
 
-apply(case_PPI_PCC, 1, function(u){
-  paste(sort(c(u[1], u[2])), collapse="|")
-}) -> case.str
+  apply(control_PPI_PCC, 1, function(u){
+    paste( sort(c(u[1], u[2])), collapse="|")
+  }) -> ctrl.str
 
-shared.edge.str = intersect(case.str, ctrl.str)
+  apply(case_PPI_PCC, 1, function(u){
+    paste(sort(c(u[1], u[2])), collapse="|")
+  }) -> case.str
 
-match(shared.edge.str, ctrl.str) -> idx.1
-control_PPI_PCC.shared = control_PPI_PCC[idx.1, ]
-
-match(shared.edge.str, case.str) -> idx.2
-case_PPI_PCC.shared = case_PPI_PCC[idx.2, ]
-
+  shared.edge.str = intersect(case.str, ctrl.str)
+  
+  match(shared.edge.str, ctrl.str) -> idx.1
+  control_PPI_PCC.shared = control_PPI_PCC[idx.1, ]
+  
+  match(shared.edge.str, case.str) -> idx.2
+  case_PPI_PCC.shared = case_PPI_PCC[idx.2, ]
+  
+}
 
 # Obtaining F(x): Fisher's transformation (Jia et al., 2014)
 F.equation = function(x){
@@ -77,8 +81,11 @@ F.equation = function(x){
 # Calculating edge-weights
 Ncontrol <- 11
 Ncase <- 10
-X <- data.frame()
+
 denominator = sqrt((1/(Ncase-3)) + (1/(Ncontrol-3))) 
+
+X <- data.frame()
+
 for(k in 1:nrow(case_PPI_PCC.shared)){
   X[k,1] <- case_PPI_PCC.shared[k,1]
   X[k,2] <- case_PPI_PCC.shared[k,2]
@@ -92,4 +99,23 @@ for(k in 1:nrow(case_PPI_PCC.shared)){
   X[k,4] = f.case
   X[k,5] = f.control
 }
+
+X <- X[-c(which(is.infinite(EW))),]
+EW <- scale(X[,3])
+EW <- abs(EW)
+EW <- qnorm(1-(pnorm(EW,lower.tail=F)*2))
+EW_file <- cbind(X[,1],X[,2],EW)
+
+#Edge weight file creation
+write.table(EW_file, "EW_MS_RNAseq_2019.txt", row.names = F, col.names = F, quote = F)
+
+#getting the node weights and matching to ew
+NW <- read.table("C:\\Users\\amanuel1\\Dev\\ZhaoLab\\MS\\GeneExpressionProfiles\\EW\\2011_original_NW.txt", as.is = T)
+shared.genes <- intersect(c(EW_file[,1],EW_file[,2]),node_weights[,1])
+shared.nodes.weight <- node_weights[match(shared.genes, node_weights[,1]), ]
+qnorm(shared.nodes.weight[,2]/2, lower.tail = F) -> node.z
+shared.nodes.weight$z <- node.z
+
+NW_file <- cbind(shared.nodes.weight[,1], shared.nodes.weight[,3])
+write.table(EW_file, "PL_Chronic_Active_NW.txt", row.names = F, col.names = F, quote = F)
 
