@@ -2,9 +2,12 @@
 #Calculating edge weights for EW_dmGWAS input, matching PPI edges to node weights.
 #04/10/2019
 
+#numeric matrix of gene expression values for control samples (gene IDs as rownames):
 GE.control <- read.table("PATH_TO_GENE_EXPRESSION_DATA_FOR_CONTROL", as.is = T)
+
+#numeric matrix of gene expression values for control samples (gene IDs as rownames):
 GE.case <- read.table("PATH_TO_GENE_EXPRESSION_DATA_FOR_CASE", as.is = T)
-PPI <- read.table("PATH_TO_PPI")
+PPI <- read.table("PATH_TO_PPI", as.is = T)
 
 
 #Obtaining PCC
@@ -22,6 +25,7 @@ matchPCCtoPPI <- function(PCCvalues, PPI){
   genes.with.expression <- row.names(GE.case)
   
   PPI_PCC <- data.frame()
+  message("Iterating through PPI network...")
   
   for(i in seq(1:nrow(PPI))){
     
@@ -45,5 +49,30 @@ matchPCCtoPPI <- function(PCCvalues, PPI){
 
 control_PPI_PCC <- matchPCCtoPPI(controlPCC, PPI)
 case_PPI_PCC <- matchPCCtoPPI(casePCC, PPI)
+
+# matching case vs control shared edges for edge-weight calculations
+
+apply(control_PPI_PCC, 1, function(u){
+  paste( sort(c(u[1], u[2])), collapse="|")
+}) -> ctrl.str
+
+apply(case_PPI_PCC, 1, function(u){
+  paste(sort(c(u[1], u[2])), collapse="|")
+}) -> case.str
+
+shared.edge.str = intersect(case.str, ctrl.str)
+
+match(shared.edge.str, ctrl.str) -> idx.1
+control_PPI_PCC.shared = control_PPI_PCC[idx.1, ]
+
+match(shared.edge.str, case.str) -> idx.2
+case_PPI_PCC.shared = case_PPI_PCC[idx.2, ]
+
+
+# Obtaining F(x): Fisher's transformation (Jia et al., 2014)
+F.equation = function(x){
+  (1/2) * log((1+x)/(1-x))
+}
+
 
 
