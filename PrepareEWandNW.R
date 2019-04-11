@@ -100,6 +100,7 @@ for(k in 1:nrow(case_PPI_PCC.shared)){
   X[k,5] = f.control
 }
 
+<<<<<<< HEAD
 X <- X[-c(which(is.infinite(EW))),]
 EW <- scale(X[,3])
 EW <- abs(EW)
@@ -119,3 +120,12 @@ shared.nodes.weight$z <- node.z
 NW_file <- cbind(shared.nodes.weight[,1], shared.nodes.weight[,3])
 write.table(EW_file, "PL_Chronic_Active_NW.txt", row.names = F, col.names = F, quote = F)
 
+=======
+# Calculate node weight
+gwas_summary <- read.delim("path_to_GWAS_summary_statistics_file",as.is=T)
+head(gwas_summary)
+gwas_summary$e <- qnorm(1-gwas_summary$pvalue/2)
+hist(gwas_summary$e)
+gwas_summaryn$e_scale <- scale(gwas_asian$e)
+write.table(gwas_summary[,c(1,4)],"node_weight.txt",sep="\t",row.names=FALSE)
+>>>>>>> 2167e75fa44aca51e06bcbad4ef78fa7226fd8b4

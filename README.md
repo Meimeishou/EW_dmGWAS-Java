@@ -12,8 +12,11 @@ see node_weight.R
 ## 2. Infer edge weight
 see edge_weight.R
 
-## 3. Run Java version of EW_dmGWAS on Windows
-### 3.1 Command line
+## 3. Download human PPI network file
+
+
+## 4. Run Java version of EW_dmGWAS on Windows
+### 4.1 Command line
 ```
 > c:
 > mkdir C:\Users\fyan\EW_dmGWAS
@@ -62,7 +65,7 @@ Start permutation for 1000 times. This may take some time.
 Finished: Fri 2019.04.05 at 12:36:49 PM CDT
 Module file: XX.txt
 ```
-### 3.2 Output file
+### 4.2 Output file
 Output format
 
 | module_genes | seed | module_score | edge_score| n_edges | z_perm |
@@ -70,7 +73,7 @@ Output format
 | gene1 gene2 | gene1 | XX | XX | 1 | XX |
 | gene2 gene3 gene4 | gene2 | XX | XX | 2 | XX |
 | gene5 gene6 | gene6 | XX | XX | 1 | XX |
-## 4. Export the result to Cytoscape and Build Network
+## 5. Export the result to Cytoscape and Build Network
 see network_generate.R
 
 
