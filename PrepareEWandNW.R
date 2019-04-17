@@ -2,23 +2,24 @@
 #Calculating edge weights for EW_dmGWAS input, matching PPI edges to node weights.
 #04/10/2019
 
+#gene-level p-values
+node_weights <- read.table("C:/Users/amanuel1/Dev/ZhaoLab/MS/GeneExpressionProfiles/EW/MS_EUR_2018/NW_MS_EUR_2018.txt", as.is = T)
+
 #numeric matrix of gene expression values for control samples (gene IDs as rownames):
 GE.control <- read.table("PATH_TO_GENE_EXPRESSION_DATA_FOR_CONTROL", as.is = T)
 
 #numeric matrix of gene expression values for control samples (gene IDs as rownames):
 GE.case <- read.table("PATH_TO_GENE_EXPRESSION_DATA_FOR_CASE", as.is = T)
+
+#Protein-prontein interaction network (2 columns for each interaction between 2 genes)
 PPI <- read.table("PATH_TO_PPI", as.is = T)
 
 
 #Obtaining PCC
 obtainPCC <- function(GE.matrix){
-  message("Obtaining PCC values")
   PCCvalues <- cor(t(GE.matrix))
   return(PCCvalues)
 }
-
-controlPCC <- obtainPCC(GE.control)
-casePCC <- obtainPCC(GE.case)
 
 #matching to PPI
 matchPCCtoPPI <- function(PCCvalues, PPI){
@@ -26,7 +27,7 @@ matchPCCtoPPI <- function(PCCvalues, PPI){
   genes.with.expression <- row.names(GE.case)
   
   PPI_PCC <- data.frame()
-  message("Iterating through PPI network and obtaining PCC values...")
+  
   
   for(i in seq(1:nrow(PPI))){
     
@@ -48,14 +49,25 @@ matchPCCtoPPI <- function(PCCvalues, PPI){
 }
 
 
+# Obtaining F(x): Fisher's transformation (Jia et al., 2014)
+F.equation = function(x){
+  (1/2) * log((1+x)/(1-x))
+}
+
+
+
+message("Obtaining CASE co-expression values...")
+casePCC <- obtainPCC(GE.case)
+message("Obtaining CONTROL co-expression values...")
+controlPCC <- obtainPCC(GE.control)
+
+message("Iterating through PPI network and matching co-expression values...")
 control_PPI_PCC <- matchPCCtoPPI(controlPCC, PPI)
-case_PPI_PCC <- matchPCCtoPPI(casePCC, PPI)
+case_PPI_PCC <- matchPCCtoPPI(casePCC, PPI)  
 
 # matching case vs control shared edges for edge-weight calculations
-
-matchSharedEdges <- function(control_PPI_PCC, case_PPI_PCC){
-
-  apply(control_PPI_PCC, 1, function(u){
+message("Matching case and control shared edges...")
+apply(control_PPI_PCC, 1, function(u){
     paste( sort(c(u[1], u[2])), collapse="|")
   }) -> ctrl.str
 
@@ -66,66 +78,58 @@ matchSharedEdges <- function(control_PPI_PCC, case_PPI_PCC){
   shared.edge.str = intersect(case.str, ctrl.str)
   
   match(shared.edge.str, ctrl.str) -> idx.1
-  control_PPI_PCC.shared = control_PPI_PCC[idx.1, ]
+  control_PPI_PCC.shared = control_PPI_PCC[idx.1, ] 
   
   match(shared.edge.str, case.str) -> idx.2
   case_PPI_PCC.shared = case_PPI_PCC[idx.2, ]
   
-}
-
-# Obtaining F(x): Fisher's transformation (Jia et al., 2014)
-F.equation = function(x){
-  (1/2) * log((1+x)/(1-x))
-}
-
-# Calculating edge-weights
-Ncontrol <- 11
-Ncase <- 10
-
-denominator = sqrt((1/(Ncase-3)) + (1/(Ncontrol-3))) 
-
-X <- data.frame()
-
-for(k in 1:nrow(case_PPI_PCC.shared)){
-  X[k,1] <- case_PPI_PCC.shared[k,1]
-  X[k,2] <- case_PPI_PCC.shared[k,2]
-  r.case <- case_PPI_PCC.shared[k,3]
-  r.control <- control_PPI_PCC.shared[k,3]
-  f.case = F.equation(r.case)
   
-  f.control = F.equation(r.control)
   
-  X[k,3] = (f.case - f.control)/denominator
-  X[k,4] = f.case
-  X[k,5] = f.control
-}
+# obtaining edge weights
+  
+message("Calculating edge weights...")
+  Ncase <- ncol(GE.case)
+  Ncontrol <- ncol(GE.control)
+  
+  denominator = sqrt((1/(Ncase-3)) + (1/(Ncontrol-3))) 
+  
+  X <- data.frame()
+  
+  for(k in 1:nrow(case_PPI_PCC.shared)){
+    X[k,1] <- case_PPI_PCC.shared[k,1]
+    X[k,2] <- case_PPI_PCC.shared[k,2]
+    r.case <- case_PPI_PCC.shared[k,3]
+    r.control <- control_PPI_PCC.shared[k,3]
+    f.case = F.equation(r.case)
+    
+    f.control = F.equation(r.control)
+    
+    X[k,3] = (f.case - f.control)/denominator
+    X[k,4] = f.case
+    X[k,5] = f.control
+  }
 
-<<<<<<< HEAD
-X <- X[-c(which(is.infinite(EW))),]
-EW <- scale(X[,3])
+X <- X[-c(which(is.infinite(X[,3]))),]
+EW <- X[,3]
+EW <- scale(EW)
 EW <- abs(EW)
 EW <- qnorm(1-(pnorm(EW,lower.tail=F)*2))
-EW_file <- cbind(X[,1],X[,2],EW)
-
-#Edge weight file creation
-write.table(EW_file, "EW_MS_RNAseq_2019.txt", row.names = F, col.names = F, quote = F)
+X$EW <- EW
+EW_file <- X[,c(1,2,6)]
 
 #getting the node weights and matching to ew
-NW <- read.table("C:\\Users\\amanuel1\\Dev\\ZhaoLab\\MS\\GeneExpressionProfiles\\EW\\2011_original_NW.txt", as.is = T)
+("Matching gene-level p-values...")
 shared.genes <- intersect(c(EW_file[,1],EW_file[,2]),node_weights[,1])
 shared.nodes.weight <- node_weights[match(shared.genes, node_weights[,1]), ]
 qnorm(shared.nodes.weight[,2]/2, lower.tail = F) -> node.z
 shared.nodes.weight$z <- node.z
 
-NW_file <- cbind(shared.nodes.weight[,1], shared.nodes.weight[,3])
-write.table(EW_file, "PL_Chronic_Active_NW.txt", row.names = F, col.names = F, quote = F)
+NW_file <- shared.nodes.weight[,c(1,3)]
+write.table(NW_file, "NodeWeights.txt", row.names = F, col.names = F, quote = F, sep="\t")
 
-=======
-# Calculate node weight
-gwas_summary <- read.delim("path_to_GWAS_summary_statistics_file",as.is=T)
-head(gwas_summary)
-gwas_summary$e <- qnorm(1-gwas_summary$pvalue/2)
-hist(gwas_summary$e)
-gwas_summaryn$e_scale <- scale(gwas_asian$e)
-write.table(gwas_summary[,c(1,4)],"node_weight.txt",sep="\t",row.names=FALSE)
->>>>>>> 2167e75fa44aca51e06bcbad4ef78fa7226fd8b4
+shared.edge.weights <- X[which(X[,1] %in% shared.genes & X[,2] %in% shared.genes), ]
+EW_file <- shared.edge.weights[,c(1,2,6)]
+write.table(EW_file, "EdgeWeights.txt", row.names = F, col.names = F, quote = F, sep="\t")
+
+
+message("Edge weight and node weight files have been created :)")
