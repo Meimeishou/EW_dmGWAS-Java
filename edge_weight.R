@@ -1,9 +1,4 @@
 Edge weight
-# Normalization
-# Handle dupliated probes
-# Calculate the PCC
-# Match with PPI network
-# Define new statistic
 ## Based on the equations in the EW_dmGWAS paper https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4514922/
 > df$F_r_case <- log((1+ df$case_cor)/(1-df$case_cor))/2
 > df$F_r_control <- log((1+ df$control_cor)/(1-df$control_cor))/2
