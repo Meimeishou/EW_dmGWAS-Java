@@ -7,10 +7,10 @@
 3. Gene expression file
 
 ## 1. Infer node weight
-see node_weight.R
+see **node_weight.R**
 
 ## 2. Infer edge weight
-see edge_weight.R
+see **edge_weight.R**
 
 ## 3. Download human PPI network file
 
@@ -73,7 +73,9 @@ Output format
 | gene1 gene2 | gene1 | XX | XX | 1 | XX |
 | gene2 gene3 gene4 | gene2 | XX | XX | 2 | XX |
 | gene5 gene6 | gene6 | XX | XX | 1 | XX |
+
 ## 5. Export the result to Cytoscape and Build Network
-see network_generate.R
+See **network_generate.R**
+Use function **top_modules(x)** to get the edge weight and node weigt file for top x modules
 
 
