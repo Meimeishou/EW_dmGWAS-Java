@@ -76,6 +76,7 @@ Output format
 
 ## 5. Export the result to Cytoscape and Build Network
 See **network_generate.R**
+
 Use function **top_modules(x)** to get the edge weight and node weigt file for top x modules
 
 
