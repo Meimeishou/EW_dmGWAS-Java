@@ -2,18 +2,23 @@
 ### EW_dmGWAS (Edge-weighted dense module search for genome-wide association studies and gene expression profiles). More information can be found at https://bioinfo.uth.edu/dmGWAS/.
 
 ## Input files:
-1. GWAS summary statistic file
-2. Human protein-protein interaction network file
+1. Gene-level GWAS summary statistic file
+2. Human protein-protein interaction (PPI) network file
 3. Gene expression file
 
-## 1. Infer node weight
+## 1. Download human PPI network file
+
+## 2. Infer node weight
 see **node_weight.R**
+Input: Gene-level GWAS summary statistic file
+Output: node_weight file
 
-## 2. Infer edge weight
+## 3. Infer edge weight
 see **edge_weight.R**
-
-## 3. Download human PPI network file
-
+Input: 
+1. Human PPI network file
+2. Gene expression file
+Output: edge_weight file
 
 ## 4. Run Java version of EW_dmGWAS on Windows
 ### 4.1 Command line
@@ -76,6 +81,8 @@ Output format
 
 ## 5. Export the result to Cytoscape and Build Network
 See **network_generate.R**
+Input: EW_dmGWAS output file
+Output: two files of top x modules that are ready to import to Cytoscape to build the network
 
 Use function **top_modules(x)** to get the edge weight and node weigt file for top x modules
 
