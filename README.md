@@ -10,14 +10,19 @@
 
 ## 2. Infer node weight
 see **node_weight.R**
+
 Input: Gene-level GWAS summary statistic file
+
 Output: node_weight file
 
 ## 3. Infer edge weight
 see **edge_weight.R**
+
 Input: 
 1. Human PPI network file
+
 2. Gene expression file
+
 Output: edge_weight file
 
 ## 4. Run Java version of EW_dmGWAS on Windows
@@ -81,7 +86,9 @@ Output format
 
 ## 5. Export the result to Cytoscape and Build Network
 See **network_generate.R**
+
 Input: EW_dmGWAS output file
+
 Output: two files of top x modules that are ready to import to Cytoscape to build the network
 
 Use function **top_modules(x)** to get the edge weight and node weigt file for top x modules
